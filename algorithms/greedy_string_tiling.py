@@ -57,9 +57,8 @@ if __name__ == "__main__":
     file1_path = os.path.join(test_examples_dir, "original_program.py")
     file2_path = os.path.join(test_examples_dir, "F_copy_type3_reordered_lines.py")
 
-    plagiarism_percent = search_plagiarism(target_file=file2_path, origin_file=file1_path, min_match_len=6)  # Увеличено значение min_match_len
+    plagiarism_percent = search_plagiarism(target_file=file2_path, origin_file=file1_path, min_match_len=6)
     if plagiarism_percent is not None:
         print(f"Процент плагиата: {plagiarism_percent}%")
     else:
         print("Не удалось вычислить процент плагиата из-за ошибки при загрузке файлов.")
-

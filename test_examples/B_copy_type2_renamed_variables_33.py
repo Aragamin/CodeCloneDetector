@@ -1,21 +1,21 @@
 # Пример программы для демонстрации алгоритмов обнаружения заимствований
 
-def factorial(x):
+def factorial(n):
     """Вычисление факториала числа."""
-    if x == 0:
+    if n == 0:
         return 1
     else:
-        return x * factorial(x - 1)
+        return n * factorial(n - 1)
 
 
-def fibonacci(x):
+def fibonacci(n):
     """Вычисление n-го числа Фибоначчи."""
-    if x <= 0:
+    if n <= 0:
         return 0
-    elif x == 1:
+    elif n == 1:
         return 1
     else:
-        return fibonacci(x - 1) + fibonacci(x - 2)
+        return fibonacci(n - 1) + fibonacci(n - 2)
 
 
 def is_prime(num):

@@ -9,12 +9,10 @@ from algorithms.heckel import search_heckel
 # Путь к директории с тестовыми примерами
 test_examples_dir = os.path.join(os.path.dirname(__file__), '..', 'test_examples')
 
-
 def load_test_example(example_name):
     example_path = os.path.join(test_examples_dir, example_name)
     with open(example_path, 'r', encoding='utf-8') as file:
         return file.read()
-
 
 def calc_plagiarism_matrix(find_plagiarism, origin_filename, target_filenames, method_name, test_count=10):
     time_out = open(method_name + '_time.csv', 'w')
@@ -31,7 +29,6 @@ def calc_plagiarism_matrix(find_plagiarism, origin_filename, target_filenames, m
     time_out.close()
     percentage_out.close()
 
-
 def merge_data(type):
     with open(f'{type}_results.csv', 'w') as outfile, \
             open(f'greedy_{type}.csv') as greedy, \
@@ -42,10 +39,9 @@ def merge_data(type):
         heckel_string = heckel.readlines()
         ast_string = ast.readlines()
         for i in range(len(greedy_string)):
-            avg_score = (float(greedy_string[i]) + float(heckel_string[i]) + float(ast_string[i])) / 3
+            avg_score = (float(greedy_string[i].strip()) + float(heckel_string[i].strip()) + float(ast_string[i].strip())) / 3
             outfile.write(
                 f'{i + 1},{greedy_string[i].strip()},{heckel_string[i].strip()},{ast_string[i].strip()},{avg_score}\n')
-
 
 def plot_results(variant, title, ylabel):
     with open(f'greedy_{variant}.csv') as greedy, \
@@ -59,7 +55,7 @@ def plot_results(variant, title, ylabel):
         ast_string = ast.readlines()
 
         # Пропускаем первую строку с заголовками
-        for i in range(1, len(greedy_string)):
+        for i in range(len(greedy_string)):
             greedy_nums.append(float(greedy_string[i].strip()))
             heckel_nums.append(float(heckel_string[i].strip()))
             ast_nums.append(float(ast_string[i].strip()))
@@ -76,7 +72,6 @@ def plot_results(variant, title, ylabel):
         plt.legend()
         plt.savefig(f'{variant}_plot.png')
         plt.show()
-
 
 def main():
     target_filenames = [
@@ -108,7 +103,6 @@ def main():
 
     plot_results('time', 'Сравнение времени выполнения', 'Время выполнения, мс')
     plot_results('percentage', 'Сравнение процентного заимствования', 'Процент заимствования, %')
-
 
 if __name__ == '__main__':
     main()
