@@ -14,11 +14,16 @@ results_dir = os.path.join(os.path.dirname(__file__), '..', 'results')
 os.makedirs(results_dir, exist_ok=True)
 
 def load_test_example(example_name):
+    """Загружает тестовый пример из файла."""
     example_path = os.path.join(test_examples_dir, example_name)
     with open(example_path, 'r', encoding='utf-8') as file:
         return file.read()
 
 def calc_plagiarism_matrix(find_plagiarism, origin_filename, target_filenames, method_name, test_count=10):
+    """
+    Вычисляет матрицу плагиата для заданного метода.
+    Сохраняет время выполнения и процент совпадений в соответствующие файлы.
+    """
     time_out_path = os.path.join(results_dir, method_name + '_time.csv')
     percentage_out_path = os.path.join(results_dir, method_name + '_percentage.csv')
     with open(time_out_path, 'w') as time_out, open(percentage_out_path, 'w') as percentage_out:
@@ -27,6 +32,7 @@ def calc_plagiarism_matrix(find_plagiarism, origin_filename, target_filenames, m
             total_time = 0.0
             for _ in range(test_count):
                 start_time = time.time()
+                # Для метода GST используется дополнительный аргумент min_match_length
                 if method_name == 'greedy':
                     percentage = find_plagiarism(os.path.join(test_examples_dir, target_filename),
                                                  os.path.join(test_examples_dir, origin_filename),
@@ -36,15 +42,16 @@ def calc_plagiarism_matrix(find_plagiarism, origin_filename, target_filenames, m
                                                  os.path.join(test_examples_dir, origin_filename))
                 total_time += (time.time() - start_time)
                 total_percentage += percentage
-                print(f"Intermediate Percentage ({target_filename}): {percentage}")
             avg_percentage = total_percentage / test_count
             avg_time = (total_time / test_count) * 1000
             percentage_out.write(f"{avg_percentage}\n")
             time_out.write(f"{avg_time}\n")
-            print(f"Final Average Percentage for {target_filename}: {avg_percentage}")
-            print(f"Final Average Time for {target_filename}: {avg_time}")
 
 def merge_data(type):
+    """
+    Объединяет данные из трех методов в один файл.
+    Считает среднее значение для каждого тестового примера.
+    """
     results_file = os.path.join(results_dir, f'{type}_results.csv')
     greedy_file = os.path.join(results_dir, f'greedy_{type}.csv')
     heckel_file = os.path.join(results_dir, f'heckel_{type}.csv')
@@ -64,6 +71,9 @@ def merge_data(type):
                 f'{string.ascii_uppercase[i]},{greedy_data[i]},{heckel_data[i]},{ast_data[i]},{avg_score}\n')
 
 def plot_results(variant, title, ylabel):
+    """
+    Строит графики результатов для времени выполнения и процента совпадений.
+    """
     greedy_file = os.path.join(results_dir, f'greedy_{variant}.csv')
     heckel_file = os.path.join(results_dir, f'heckel_{variant}.csv')
     ast_file = os.path.join(results_dir, f'ast_{variant}.csv')
@@ -91,9 +101,9 @@ def plot_results(variant, title, ylabel):
         plt.plot(alphabet[:len(ast_nums)], ast_nums, label='AST', linestyle='-.', marker='^')
 
         for i, (g, h, a) in enumerate(zip(greedy_nums, heckel_nums, ast_nums)):
-            plt.text(i, g, f'{g:.1f}', ha='center', va='bottom', fontsize=8, color='blue')
-            plt.text(i, h, f'{h:.1f}', ha='center', va='bottom', fontsize=8, color='orange')
-            plt.text(i, a, f'{a:.1f}', ha='center', va='bottom', fontsize=8, color='green')
+            plt.text(i, g, f'{g:.1f}', ha='center', va='bottom', fontsize=10, color='blue')
+            plt.text(i, h, f'{h:.1f}', ha='center', va='bottom', fontsize=10, color='orange')
+            plt.text(i, a, f'{a:.1f}', ha='center', va='bottom', fontsize=10, color='green')
 
         plt.title(title)
         plt.xlabel('Тестовые данные')
@@ -105,6 +115,9 @@ def plot_results(variant, title, ylabel):
         plt.show()
 
 def main():
+    """
+    Основная функция, выполняющая тестирование и построение графиков.
+    """
     target_filenames = [
         'A_copy_type1_complete.py',
         'B_copy_type2_renamed_variables_33.py',
