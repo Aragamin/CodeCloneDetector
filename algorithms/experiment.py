@@ -2,9 +2,9 @@ import os
 import string
 import time
 from matplotlib import pyplot as plt
-from algorithms.ast_find import calculate_plagiarism_percentage
-from algorithms.greedy_string_tiling import search_plagiarism
-from algorithms.heckel import search_heckel
+from ast_find import calculate_plagiarism_percentage
+from greedy_string_tiling import search_greedy_string_tiling
+from heckel import search_heckel
 
 # Путь к директории с тестовыми примерами
 test_examples_dir = os.path.join(os.path.dirname(__file__), '..', 'test_examples')
@@ -27,14 +27,22 @@ def calc_plagiarism_matrix(find_plagiarism, origin_filename, target_filenames, m
             total_time = 0.0
             for _ in range(test_count):
                 start_time = time.time()
-                percentage = find_plagiarism(os.path.join(test_examples_dir, target_filename),
-                                             os.path.join(test_examples_dir, origin_filename))
+                if method_name == 'greedy':
+                    percentage = find_plagiarism(os.path.join(test_examples_dir, target_filename),
+                                                 os.path.join(test_examples_dir, origin_filename),
+                                                 min_match_length=6)
+                else:
+                    percentage = find_plagiarism(os.path.join(test_examples_dir, target_filename),
+                                                 os.path.join(test_examples_dir, origin_filename))
                 total_time += (time.time() - start_time)
                 total_percentage += percentage
+                print(f"Intermediate Percentage ({target_filename}): {percentage}")
             avg_percentage = total_percentage / test_count
             avg_time = (total_time / test_count) * 1000
             percentage_out.write(f"{avg_percentage}\n")
             time_out.write(f"{avg_time}\n")
+            print(f"Final Average Percentage for {target_filename}: {avg_percentage}")
+            print(f"Final Average Time for {target_filename}: {avg_time}")
 
 def merge_data(type):
     results_file = os.path.join(results_dir, f'{type}_results.csv')
@@ -113,7 +121,7 @@ def main():
         target_filenames=target_filenames, method_name='ast',
     )
     calc_plagiarism_matrix(
-        find_plagiarism=search_plagiarism, origin_filename='original_program.py',
+        find_plagiarism=search_greedy_string_tiling, origin_filename='original_program.py',
         target_filenames=target_filenames, method_name='greedy',
     )
     calc_plagiarism_matrix(
