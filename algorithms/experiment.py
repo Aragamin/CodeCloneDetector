@@ -1,6 +1,6 @@
+import os
 import string
 import time
-import os
 from matplotlib import pyplot as plt
 from algorithms.ast_find import calculate_plagiarism_percentage
 from algorithms.greedy_string_tiling import search_plagiarism
@@ -9,44 +9,61 @@ from algorithms.heckel import search_heckel
 # Путь к директории с тестовыми примерами
 test_examples_dir = os.path.join(os.path.dirname(__file__), '..', 'test_examples')
 
+# Путь к директории для результатов
+results_dir = os.path.join(os.path.dirname(__file__), '..', 'results')
+os.makedirs(results_dir, exist_ok=True)
+
+
 def load_test_example(example_name):
     example_path = os.path.join(test_examples_dir, example_name)
     with open(example_path, 'r', encoding='utf-8') as file:
         return file.read()
 
+
 def calc_plagiarism_matrix(find_plagiarism, origin_filename, target_filenames, method_name, test_count=10):
-    time_out = open(method_name + '_time.csv', 'w')
-    percentage_out = open(method_name + '_percentage.csv', 'w')
-    for target_filename in target_filenames:
-        percentage = 0.0
-        start_time = time.time()
-        for _ in range(test_count):
-            percentage = find_plagiarism(os.path.join(test_examples_dir, target_filename),
-                                         os.path.join(test_examples_dir, origin_filename))
-        result_time = (time.time() - start_time) / test_count * 1000
-        time_out.write(str(result_time) + '\n')
-        percentage_out.write(str(percentage) + '\n')
-    time_out.close()
-    percentage_out.close()
+    time_out_path = os.path.join(results_dir, method_name + '_time.csv')
+    percentage_out_path = os.path.join(results_dir, method_name + '_percentage.csv')
+    with open(time_out_path, 'w') as time_out, open(percentage_out_path, 'w') as percentage_out:
+        for target_filename in target_filenames:
+            percentage = 0.0
+            start_time = time.time()
+            for _ in range(test_count):
+                percentage = find_plagiarism(os.path.join(test_examples_dir, target_filename),
+                                             os.path.join(test_examples_dir, origin_filename))
+            result_time = (time.time() - start_time) / test_count * 1000
+            time_out.write(str(result_time) + '\n')
+            percentage_out.write(str(percentage) + '\n')
+
 
 def merge_data(type):
-    with open(f'{type}_results.csv', 'w') as outfile, \
-            open(f'greedy_{type}.csv') as greedy, \
-            open(f'heckel_{type}.csv') as heckel, \
-            open(f'ast_{type}.csv') as ast:
+    results_file = os.path.join(results_dir, f'{type}_results.csv')
+    greedy_file = os.path.join(results_dir, f'greedy_{type}.csv')
+    heckel_file = os.path.join(results_dir, f'heckel_{type}.csv')
+    ast_file = os.path.join(results_dir, f'ast_{type}.csv')
+
+    with open(results_file, 'w') as outfile, \
+            open(greedy_file) as greedy, \
+            open(heckel_file) as heckel, \
+            open(ast_file) as ast:
         outfile.write('Тестовые данные,Строковый,Токенизация,AST,Среднее значение\n')
         greedy_string = greedy.readlines()
         heckel_string = heckel.readlines()
         ast_string = ast.readlines()
         for i in range(len(greedy_string)):
-            avg_score = (float(greedy_string[i].strip()) + float(heckel_string[i].strip()) + float(ast_string[i].strip())) / 3
+            avg_score = (float(greedy_string[i].strip()) + float(heckel_string[i].strip()) + float(
+                ast_string[i].strip())) / 3
             outfile.write(
                 f'{i + 1},{greedy_string[i].strip()},{heckel_string[i].strip()},{ast_string[i].strip()},{avg_score}\n')
 
+
 def plot_results(variant, title, ylabel):
-    with open(f'greedy_{variant}.csv') as greedy, \
-            open(f'heckel_{variant}.csv') as heckel, \
-            open(f'ast_{variant}.csv') as ast:
+    greedy_file = os.path.join(results_dir, f'greedy_{variant}.csv')
+    heckel_file = os.path.join(results_dir, f'heckel_{variant}.csv')
+    ast_file = os.path.join(results_dir, f'ast_{variant}.csv')
+
+    with open(greedy_file) as greedy, \
+            open(heckel_file) as heckel, \
+            open(ast_file) as ast:
         greedy_nums = []
         heckel_nums = []
         ast_nums = []
@@ -70,8 +87,10 @@ def plot_results(variant, title, ylabel):
         plt.xlabel('Тестовые данные')
         plt.ylabel(ylabel)
         plt.legend()
-        plt.savefig(f'{variant}_plot.png')
+        plot_path = os.path.join(results_dir, f'{variant}_plot.png')
+        plt.savefig(plot_path)
         plt.show()
+
 
 def main():
     target_filenames = [
@@ -103,6 +122,7 @@ def main():
 
     plot_results('time', 'Сравнение времени выполнения', 'Время выполнения, мс')
     plot_results('percentage', 'Сравнение процентного заимствования', 'Процент заимствования, %')
+
 
 if __name__ == '__main__':
     main()
