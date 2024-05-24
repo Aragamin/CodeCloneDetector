@@ -67,7 +67,7 @@ def main():
     print(f"Отсортированный массив: {sorted_arr}")
 
     target = 10
-    index = binary_search(sorted_arr, target)
+    index = binary_search(sorted_arr, target)   
     if index != -1:
         print(f"Элемент {target} найден на позиции {index} в отсортированном массиве.")
     else:

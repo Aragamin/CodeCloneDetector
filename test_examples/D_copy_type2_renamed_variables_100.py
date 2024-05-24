@@ -1,77 +1,77 @@
 # Пример программы для демонстрации алгоритмов обнаружения заимствований
 
-def compute_fact(n):
+def calc_factorial(k):
     """Вычисление факториала числа."""
-    if n == 0:
+    if k == 0:
         return 1
     else:
-        return n * compute_fact(n - 1)
+        return k * calc_factorial(k - 1)
 
 
-def compute_fib(n):
+def calc_fibonacci(k):
     """Вычисление n-го числа Фибоначчи."""
-    if n <= 0:
+    if k <= 0:
         return 0
-    elif n == 1:
+    elif k == 1:
         return 1
     else:
-        return compute_fib(n - 1) + compute_fib(n - 2)
+        return calc_fibonacci(k - 1) + calc_fibonacci(k - 2)
 
 
-def is_num_prime(num):
+def prime_number(k):
     """Проверка, является ли число простым."""
-    if num <= 1:
+    if k <= 1:
         return False
-    for i in range(2, int(num ** 0.5) + 1):
-        if num % i == 0:
+    for j in range(2, int(k ** 0.5) + 1):
+        if k % j == 0:
             return False
     return True
 
 
-def quick_sorting(array):
+def quick_sort(array):
     """Быстрая сортировка массива."""
     if len(array) <= 1:
         return array
     else:
-        pivot = array[len(array) // 2]
-        left = [x for x in array if x < pivot]
-        middle = [x for x in array if x == pivot]
-        right = [x for x in array if x > pivot]
-        return quick_sorting(left) + middle + quick_sorting(right)
+        new_pivot = array[len(array) // 2]
+        new_left = [value for value in array if value < new_pivot]
+        new_middle = [value for value in array if value == new_pivot]
+        new_right = [value for value in array if value > new_pivot]
+        return quick_sort(new_left) + new_middle + quick_sort(new_right)
 
 
-def binary_search_func(array, target):
+def search_binary(array, target_value):
     """Бинарный поиск в отсортированном массиве."""
-    left, right = 0, len(array) - 1
-    while left <= right:
-        mid = (left + right) // 2
-        if array[mid] == target:
-            return mid
-        elif array[mid] < target:
-            left = mid + 1
+    new_left, new_right = 0, len(array) - 1
+    while new_left <= new_right:
+        new_mid = (new_left + new_right) // 2
+        if array[new_mid] == target_value:
+            return new_mid
+        elif array[new_mid] < target_value:
+            new_left = new_mid + 1
         else:
-            right = mid - 1
+            new_right = new_mid - 1
     return -1
 
 
 def main():
     """Основная функция."""
-    num = 5
-    print(f"Факториал {num} = {compute_fact(num)}")
-    print(f"Число Фибоначчи {num} = {compute_fib(num)}")
-    print(f"Число {num} простое? {is_num_prime(num)}")
+    number = 5
+    print(f"Факториал {number} = {calc_factorial(number)}")
+    print(f"Число Фибоначчи {number} = {calc_fibonacci(number)}")
+    print(f"Число {number} простое? {prime_number(number)}")
 
-    arr = [3, 6, 8, 10, 1, 2, 1]
-    print(f"Исходный массив: {arr}")
-    sorted_arr = quick_sorting(arr)
+    array = [3, 6, 8, 10, 1, 2, 1]
+    print(f"Исходный массив: {array}")
+    sorted_arr = quick_sort(array)
     print(f"Отсортированный массив: {sorted_arr}")
 
-    target = 10
-    index = binary_search_func(sorted_arr, target)
-    if index != -1:
-        print(f"Элемент {target} найден на позиции {index} в отсортированном массиве.")
+    target_value = 10
+    index_position = search_binary(sorted_arr, target_value)
+    if index_position != -1:
+        print(f"Элемент {target_value} найден на позиции {index_position} в отсортированном массиве.")
     else:
-        print(f"Элемент {target} не найден в массиве.")
+        print(f"Элемент {target_value} не найден в массиве.")
 
 
 if __name__ == "__main__":

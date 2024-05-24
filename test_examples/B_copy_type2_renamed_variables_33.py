@@ -1,29 +1,29 @@
 # Пример программы для демонстрации алгоритмов обнаружения заимствований
 
-def factorial(n):
+def factorial(k):
     """Вычисление факториала числа."""
-    if n == 0:
+    if k == 0:
         return 1
     else:
-        return n * factorial(n - 1)
+        return k * factorial(k - 1)
 
 
-def fibonacci(n):
+def fibonacci(k):
     """Вычисление n-го числа Фибоначчи."""
-    if n <= 0:
+    if k <= 0:
         return 0
-    elif n == 1:
+    elif k == 1:
         return 1
     else:
-        return fibonacci(n - 1) + fibonacci(n - 2)
+        return fibonacci(k - 1) + fibonacci(k - 2)
 
 
-def is_prime(num):
+def is_prime(k):
     """Проверка, является ли число простым."""
-    if num <= 1:
+    if k <= 1:
         return False
-    for i in range(2, int(num ** 0.5) + 1):
-        if num % i == 0:
+    for i in range(2, int(k ** 0.5) + 1):
+        if k % i == 0:
             return False
     return True
 
@@ -56,10 +56,10 @@ def binary_search(array, target):
 
 def main():
     """Основная функция."""
-    num = 5
-    print(f"Факториал {num} = {factorial(num)}")
-    print(f"Число Фибоначчи {num} = {fibonacci(num)}")
-    print(f"Число {num} простое? {is_prime(num)}")
+    number = 5
+    print(f"Факториал {number} = {factorial(number)}")
+    print(f"Число Фибоначчи {number} = {fibonacci(number)}")
+    print(f"Число {number} простое? {is_prime(number)}")
 
     arr = [3, 6, 8, 10, 1, 2, 1]
     print(f"Исходный массив: {arr}")

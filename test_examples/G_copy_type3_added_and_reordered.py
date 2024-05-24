@@ -62,21 +62,21 @@ def binary_search(arr, target):
 def main():
     """Основная функция."""
     arr = [3, 6, 8, 10, 1, 2, 1]
-    sorted_arr = quicksort(arr)
     print(f"Исходный массив: {arr}")
+    sorted_arr = quicksort(arr)
     print(f"Отсортированный массив: {sorted_arr}")
 
     target = 10
+    num = 5
+    print(f"Факториал {num} = {factorial(num)}")
+    print(f"Число Фибоначчи {num} = {fibonacci(num)}")
+    print(f"Число {num} простое? {is_prime(num)}")
+
     index = binary_search(sorted_arr, target)
     if index != -1:
         print(f"Элемент {target} найден на позиции {index} в отсортированном массиве.")
     else:
         print(f"Элемент {target} не найден в массиве.")
-
-    num = 5
-    print(f"Факториал {num} = {factorial(num)}")
-    print(f"Число Фибоначчи {num} = {fibonacci(num)}")
-    print(f"Число {num} простое? {is_prime(num)}")
 
 
 if __name__ == "__main__":

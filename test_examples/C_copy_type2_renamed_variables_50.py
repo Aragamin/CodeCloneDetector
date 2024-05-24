@@ -1,29 +1,29 @@
 # Пример программы для демонстрации алгоритмов обнаружения заимствований
 
-def calc_factorial(n):
+def calc_factorial(k):
     """Вычисление факториала числа."""
-    if n == 0:
+    if k == 0:
         return 1
     else:
-        return n * calc_factorial(n - 1)
+        return k * calc_factorial(k - 1)
 
 
-def calc_fibonacci(n):
+def calc_fibonacci(k):
     """Вычисление n-го числа Фибоначчи."""
-    if n <= 0:
+    if k <= 0:
         return 0
-    elif n == 1:
+    elif k == 1:
         return 1
     else:
-        return calc_fibonacci(n - 1) + calc_fibonacci(n - 2)
+        return calc_fibonacci(k - 1) + calc_fibonacci(k - 2)
 
 
-def check_prime(num):
+def prime_number(k):
     """Проверка, является ли число простым."""
-    if num <= 1:
+    if k <= 1:
         return False
-    for i in range(2, int(num ** 0.5) + 1):
-        if num % i == 0:
+    for j in range(2, int(k ** 0.5) + 1):
+        if k % j == 0:
             return False
     return True
 
@@ -33,14 +33,14 @@ def quick_sort(array):
     if len(array) <= 1:
         return array
     else:
-        pivot = array[len(array) // 2]
-        left = [x for x in array if x < pivot]
-        middle = [x for x in array if x == pivot]
-        right = [x for x in array if x > pivot]
+        new_pivot = array[len(array) // 2]
+        left = [x for x in array if x < new_pivot]
+        middle = [x for x in array if x == new_pivot]
+        right = [x for x in array if x > new_pivot]
         return quick_sort(left) + middle + quick_sort(right)
 
 
-def binary_search_algo(array, target):
+def binary_search(array, target):
     """Бинарный поиск в отсортированном массиве."""
     left, right = 0, len(array) - 1
     while left <= right:
@@ -56,10 +56,10 @@ def binary_search_algo(array, target):
 
 def main():
     """Основная функция."""
-    num = 5
-    print(f"Факториал {num} = {calc_factorial(num)}")
-    print(f"Число Фибоначчи {num} = {calc_fibonacci(num)}")
-    print(f"Число {num} простое? {check_prime(num)}")
+    number = 5
+    print(f"Факториал {number} = {calc_factorial(number)}")
+    print(f"Число Фибоначчи {number} = {calc_fibonacci(number)}")
+    print(f"Число {number} простое? {prime_number(number)}")
 
     arr = [3, 6, 8, 10, 1, 2, 1]
     print(f"Исходный массив: {arr}")
@@ -67,7 +67,7 @@ def main():
     print(f"Отсортированный массив: {sorted_arr}")
 
     target = 10
-    index = binary_search_algo(sorted_arr, target)
+    index = binary_search(sorted_arr, target)
     if index != -1:
         print(f"Элемент {target} найден на позиции {index} в отсортированном массиве.")
     else:
