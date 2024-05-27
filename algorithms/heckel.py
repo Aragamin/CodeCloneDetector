@@ -200,4 +200,3 @@ if __name__ == "__main__":
 
     plagiarism_percentage = search_heckel(target_filename=file2_path, origin_filename=file1_path)
     print("Процент заимствований между файлами:", plagiarism_percentage, "%")
-

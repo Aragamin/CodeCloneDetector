@@ -148,5 +148,35 @@ def main():
     plot_results('time', 'Сравнение времени выполнения', 'Время выполнения, мс')
     plot_results('percentage', 'Сравнение процентного заимствования', 'Процент заимствования, %')
 
+    # Вывод средних значений по времени и проценту заимствований
+    print_average_results()
+
+def print_average_results():
+    """
+    Выводит средние значения по времени выполнения и проценту заимствований для каждого метода.
+    """
+    time_files = {
+        'Строковый метод': 'greedy_time.csv',
+        'Токенизация': 'heckel_time.csv',
+        'AST': 'ast_time.csv'
+    }
+    percentage_files = {
+        'Строковый метод': 'greedy_percentage.csv',
+        'Токенизация': 'heckel_percentage.csv',
+        'AST': 'ast_percentage.csv'
+    }
+
+    for method, filename in time_files.items():
+        with open(os.path.join(results_dir, filename)) as file:
+            times = [float(line.strip()) for line in file]
+            avg_time = sum(times) / len(times)
+            print(f"Среднее время выполнения для {method}: {avg_time:.2f} мс")
+
+    for method, filename in percentage_files.items():
+        with open(os.path.join(results_dir, filename)) as file:
+            percentages = [float(line.strip()) for line in file]
+            avg_percentage = sum(percentages) / len(percentages)
+            print(f"Средний процент заимствований для {method}: {avg_percentage:.2f} %")
+
 if __name__ == '__main__':
     main()
