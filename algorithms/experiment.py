@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from ast_find import calculate_plagiarism_percentage
 from greedy_string_tiling import search_greedy_string_tiling
 from heckel import search_heckel
+import numpy as np
 
 # Путь к директории с тестовыми примерами
 test_examples_dir = os.path.join(os.path.dirname(__file__), '..', 'test_examples')
@@ -70,7 +71,7 @@ def merge_data(type):
             outfile.write(
                 f'{string.ascii_uppercase[i]},{greedy_data[i]},{heckel_data[i]},{ast_data[i]},{avg_score}\n')
 
-def plot_results(variant, title, ylabel):
+def plot_results0(variant, title, ylabel):
     """
     Строит графики результатов для времени выполнения и процента совпадений.
     """
@@ -113,6 +114,66 @@ def plot_results(variant, title, ylabel):
         plot_path = os.path.join(results_dir, f'{variant}_plot.png')
         plt.savefig(plot_path)
         plt.show()
+
+def plot_results(variant, title, ylabel):
+    """
+    Строит графики результатов для времени выполнения и процента совпадений.
+    """
+    greedy_file = os.path.join(results_dir, f'greedy_{variant}.csv')
+    heckel_file = os.path.join(results_dir, f'heckel_{variant}.csv')
+    ast_file = os.path.join(results_dir, f'ast_{variant}.csv')
+
+    with open(greedy_file) as greedy, \
+            open(heckel_file) as heckel, \
+            open(ast_file) as ast:
+        greedy_nums = []
+        heckel_nums = []
+        ast_nums = []
+        greedy_lines = greedy.readlines()
+        heckel_lines = heckel.readlines()
+        ast_lines = ast.readlines()
+
+        for line in greedy_lines:
+            greedy_nums.append(float(line.strip()))
+        for line in heckel_lines:
+            heckel_nums.append(float(line.strip()))
+        for line in ast_lines:
+            ast_nums.append(float(line.strip()))
+
+        alphabet = list(string.ascii_uppercase)
+        x = np.arange(len(greedy_nums))  # индекс для x координаты
+        bar_width = 0.25
+
+        plt.figure(figsize=(10, 6))
+        plt.bar(x - bar_width, greedy_nums, width=bar_width, label='Строковый метод', color='blue')
+        plt.bar(x, heckel_nums, width=bar_width, label='Токенизация', color='orange')
+        plt.bar(x + bar_width, ast_nums, width=bar_width, label='AST', color='green')
+
+        for i, (g, h, a) in enumerate(zip(greedy_nums, heckel_nums, ast_nums)):
+            plt.text(i - bar_width, g, f'{g:.1f}', ha='center', va='bottom', fontsize=10, bbox=dict(facecolor='white', alpha=0.7))
+            plt.text(i, h, f'{h:.1f}', ha='center', va='bottom', fontsize=10, bbox=dict(facecolor='white', alpha=0.7))
+            plt.text(i + bar_width, a, f'{a:.1f}', ha='center', va='bottom', fontsize=10, bbox=dict(facecolor='white', alpha=0.7))
+
+        plt.title(title, fontsize=16)
+        plt.xlabel('Тестовые данные', fontsize=14)
+        plt.ylabel(ylabel, fontsize=14)
+        plt.xticks(x, alphabet[:len(greedy_nums)], fontsize=12)
+        plt.yticks(fontsize=12)
+        plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+
+        # Настройка положения легенды
+        if variant == 'time':
+            plt.legend(fontsize=12, loc='upper left', bbox_to_anchor=(0, 1), borderaxespad=0., frameon=True, edgecolor='black')
+        elif variant == 'percentage':
+            plt.legend(fontsize=12, loc='lower left', bbox_to_anchor=(0, 0), borderaxespad=0., frameon=True, edgecolor='black')
+
+        plt.tight_layout()
+        plot_path = os.path.join(results_dir, f'{variant}_plot.png')
+        plt.savefig(plot_path, dpi=300)
+        plt.show()
+
+
+
 
 def main():
     """
